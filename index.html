@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern 3D Website</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.1/ScrollTrigger.min.js"></script>
+    <style>
+        /* Modern CSS Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #4f46e5;
+    --secondary: #06b6d4;
+    --dark: #111827;
+    --light: #ffffff;
+    --gray: #9ca3af;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--dark);
+    color: var(--light);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Glassmorphism Header */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px 40px;
+    background: rgba(17, 24, 39, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+nav ul {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+}
+
+nav a {
+    color: var(--light);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    transition: width 0.3s ease;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+/* Hero Section */
+.hero-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 20px;
+    position: relative;
+    background: radial-gradient(circle at center, #1f2937, var(--dark));
+}
+
+#scene-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 800px;
+}
+
+.hero-title {
+    font-size: 64px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    line-height: 1.1;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: fadeInUp 1s ease;
+}
+
+.hero-subtitle {
+    font-size: 20px;
+    color: var(--gray);
+    margin-bottom: 40px;
+    animation: fadeInUp 1s ease 0.2s backwards;
+}
+
+/* Modern Button Styles */
+.cta-button {
+    padding: 15px 40px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--light);
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeInUp 1s ease 0.4s backwards;
+}
+
+.cta-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.4);
+}
+
+/* Projects Section */
+.content-section {
+    padding: 100px 20px;
+    background: #1a1a1a;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: 48px;
+    text-align: center;
+    margin-bottom: 60px;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px;
+}
+
+.project-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.project-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.project-image {
+    height: 200px;
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    position: relative;
+    overflow: hidden;
+}
+
+.project-details {
+    padding: 25px;
+}
+
+.project-details h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: var(--light);
+}
+
+.project-details p {
+    color: var(--gray);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* Contact Form */
+.contact-section {
+    padding: 100px 20px;
+    background: linear-gradient(to bottom, #1a1a1a, var(--dark));
+}
+
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: var(--light);
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+}
+
+.submit-button {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    border: none;
+    border-radius: 10px;
+    color: var(--light);
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.submit-button:hover {
+    transform: translateY(-3px);
+}
+
+/* Footer */
+footer {
+    padding: 60px 20px 30px;
+    background: var(--dark);
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.social-links {
+    display: flex;
+    gap: 20px;
+}
+
+.social-links a {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: var(--light);
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    transform: translateY(-3px);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 40px;
+    }
+    
+    .hero-subtitle {
+        font-size: 18px;
+    }
+    
+    nav {
+        display: none;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* Loading Animation */
+.loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loader-content {
+    text-align: center;
+}
+
+.progress-bar {
+    width: 300px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    margin: 20px 0;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    transition: width 0.3s ease;
+}
+
+/* Add this to your HTML head section */
+```html
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+```
+
+This CSS includes:
+
+1. Modern color scheme with CSS variables
+2. Glassmorphism effects
+3. Smooth gradients and transitions
+4. Responsive design
+5. Modern card designs
+6. Beautiful form styling
+7. Animated elements
+8. Clean typography with Poppins font
+9. Professional hover effects
+10. Loading animation
+
+To make sure the CSS is working:
+
+1. Make sure the CSS file is properly linked in your HTML:
+```html
+<link rel="stylesheet" href="css/style.css">
+```
+
+2. Check if the file path is correct
+3. Clear your browser cache
+4. Make sure all class names in your HTML match the CSS
+5. Add the Google Fonts link in your HTML head section
+
+If you're still having issues, try:
+1. Opening your browser's developer tools (F12)
+2. Check the Console tab for any errors
+3. Look at the Network tab to ensure the CSS file is loading
+4. Verify that the CSS selectors match your HTML structure
+
+Would you like me to help you troubleshoot any specific issues you're seeing? 
+    </style>
+</head>
+<body>
+    <div class="loader">
+        <div class="loader-content">
+            <h2>Loading Experience</h2>
+            <div class="progress-bar">
+                <div class="progress-bar-fill"></div>
+            </div>
+            <p class="loading-text">0%</p>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo">SPACE3D</div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#work">Work</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+    </header>
+
+    <section id="home" class="hero-section">
+        <canvas id="scene-canvas"></canvas>
+        <div class="hero-content">
+            <h1 class="hero-title">Next-Gen 3D Experiences</h1>
+            <p class="hero-subtitle">Explore the future of web design with immersive 3D technology</p>
+            <button class="cta-button">Explore Now</button>
+        </div>
+    </section>
+
+    <section class="experience-section">
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2 class="section-title">About Us</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>We create cutting-edge 3D web experiences that push the boundaries of what's possible on the web. Our team combines artistic vision with technical expertise to deliver immersive digital experiences.</p>
+                    <p>Using the latest WebGL and 3D technologies, we build interactive websites that captivate and engage users like never before.</p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat">
+                        <h3>50+</h3>
+                        <p>Projects</p>
+                    </div>
+                    <div class="stat">
+                        <h3>25+</h3>
+                        <p>Clients</p>
+                    </div>
+                    <div class="stat">
+                        <h3>5+</h3>
+                        <p>Awards</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <form class="contact-form">
+                <div class="form-group">
+                    <input type="text" id="name" placeholder="Your Name">
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Your Email">
+                </div>
+                <div class="form-group">
+                    <textarea id="message" placeholder="Your Message"></textarea>
+                </div>
+                <button type="submit" class="submit-button">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">SPACE3D</div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2023 SPACE3D. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Three.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.152.0/three.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- Updated JavaScript with Better Error Handling -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Add Font Awesome if not already present
+        if (!document.querySelector('[href*="font-awesome"]')) {
+            const fontAwesome = document.createElement('link');
+            fontAwesome.rel = 'stylesheet';
+            fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+            document.head.appendChild(fontAwesome);
+        }
+
+        // Handle images
+        const projectCards = document.querySelectorAll('.project-card');
+        
+        projectCards.forEach(card => {
+            const img = card.querySelector('img');
+            if (img) {
+                img.style.opacity = '0';
+                
+                const loadImage = () => {
+                    img.style.opacity = '1';
+                    img.style.transition = 'opacity 0.3s ease';
+                };
+
+                if (img.complete) {
+                    loadImage();
+                } else {
+                    img.addEventListener('load', loadImage);
+                }
+
+                img.addEventListener('error', () => {
+                    const wrapper = img.closest('.project-image-wrapper');
+                    wrapper.innerHTML = `
+                        <div class="project-image-placeholder">
+                            <div class="placeholder-content">
+                                <i class="fas fa-cube"></i>
+                                <span>${img.alt || '3D Project'}</span>
+                            </div>
+                        </div>
+                        <div class="project-overlay">
+                            <span>Explore</span>
+                        </div>
+                    `;
+                });
+            }
+        });
+
+        // Animate stats when in viewport
+        const stats = document.querySelectorAll('.stat-number');
+        
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'countUp 2s ease-out forwards';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        stats.forEach(stat => observer.observe(stat));
+
+        // Add hover effect for feature cards
+        const cards = document.querySelectorAll('.feature-card');
+        
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.querySelector('.feature-icon').style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.querySelector('.feature-icon').style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+
+        // Initialize progress rings
+        const rings = document.querySelectorAll('.progress-ring-circle');
+        rings.forEach(ring => {
+            const percent = ring.closest('.progress-ring').querySelector('.percentage').textContent;
+            const circumference = 2 * Math.PI * 54;
+            const offset = circumference - (percent / 100 * circumference);
+            ring.style.strokeDashoffset = offset;
+        });
+
+        // Tab functionality
+        const tabs = document.querySelectorAll('.tab-btn');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                // Add your tab content switching logic here
+            });
+        });
+
+        // Add tilt effect to cards
+        const cards = document.querySelectorAll('.exp-card');
+        cards.forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const angleX = (y - centerY) / 20;
+                const angleY = (centerX - x) / 20;
+                
+                card.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) translateZ(10px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+            });
+        });
+
+        // Add intersection observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.exp-card, .stat-item').forEach(el => observer.observe(el));
+
+        // Enhanced Interactivity
+        document.querySelectorAll('.ring-progress').forEach(ring => {
+            const progress = ring.dataset.progress;
+            ring.style.setProperty('--progress', `${progress}%`);
+        });
+
+        document.querySelectorAll('.metric-bar').forEach(bar => {
+            const value = bar.dataset.value;
+            bar.style.setProperty('--value', `${value}%`);
+        });
+
+        document.querySelectorAll('.cyber-box').forEach(box => {
+            box.addEventListener('mouseenter', () => {
+                box.querySelector('.neon-icon').style.animation = 'pulse 1s infinite';
+            });
+
+            box.addEventListener('mouseleave', () => {
+                box.querySelector('.neon-icon').style.animation = 'none';
+            });
+        });
+
+        const glitchText = document.querySelector('.cyber-glitch');
+        glitchText.addEventListener('mouseover', () => {
+            glitchText.style.animation = 'glitchText 0.3s infinite';
+        });
+
+        glitchText.addEventListener('mouseout', () => {
+            glitchText.style.animation = 'glitchText 3s infinite';
+        });
+
+        // Updated JavaScript without circular indicators
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add Font Awesome if not already present
+            if (!document.querySelector('[href*="font-awesome"]')) {
+                const fontAwesome = document.createElement('link');
+                fontAwesome.rel = 'stylesheet';
+                fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+                document.head.appendChild(fontAwesome);
+            }
+
+            // Initialize meter bars
+            document.querySelectorAll('.meter-fill').forEach(fill => {
+                const value = fill.style.width || '0%';
+                fill.style.setProperty('--width', value);
+            });
+
+            // Initialize metric bars
+            document.querySelectorAll('.metric-bar').forEach(bar => {
+                const value = bar.dataset.value;
+                bar.style.setProperty('--value', `${value}%`);
+            });
+
+            // Add intersection observer for animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                        
+                        // Add specific animations for elements
+                        if (entry.target.classList.contains('meter-fill')) {
+                            entry.target.style.animation = 'fillMeter 1.5s ease-out forwards';
+                        }
+                        
+                        if (entry.target.classList.contains('metric-bar')) {
+                            entry.target.classList.add('animate-bar');
+                        }
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            // Observe all animated elements
+            document.querySelectorAll('.cyber-box, .metric-box, .meter-fill, .metric-bar').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Add hover effects for boxes
+            document.querySelectorAll('.cyber-box').forEach(box => {
+                box.addEventListener('mouseenter', () => {
+                    const icon = box.querySelector('.neon-icon');
+                    if (icon) {
+                        icon.style.animation = 'pulse 1s infinite';
+                    }
+                });
+                
+                box.addEventListener('mouseleave', () => {
+                    const icon = box.querySelector('.neon-icon');
+                    if (icon) {
+                        icon.style.animation = 'none';
+                    }
+                });
+            });
+            
+            // Fix for iOS Safari 100vh issue
+            const fixHeight = () => {
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            };
+            
+            fixHeight();
+            window.addEventListener('resize', fixHeight);
+        });
+    });
+
+    // Add this to your CSS for the counting animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    </script>
+
+    <!-- Ultra-Modern Neon 3D Experience Hub (Fully Responsive) -->
+    <section class="neon-experience">
+        <!-- Animated Background -->
+        <div class="cyber-grid"></div>
+        
+        <div class="container">
+            <!-- Futuristic Header -->
+            <div class="cyber-header">
+                <div class="glitch-wrapper">
+                    <h1 class="cyber-glitch" data-text="3D UNIVERSE">3D UNIVERSE</h1>
+                </div>
+                <div class="cyber-bars"></div>
+                <p class="cyber-subtitle">Next Generation Digital Experiences</p>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="cyber-grid-container">
+                <!-- Feature Box 1 -->
+                <div class="cyber-box primary">
+                    <div class="box-content">
+                        <div class="neon-icon">
+                            <i class="fas fa-vr-cardboard"></i>
+                        </div>
+                        <h3>Virtual Reality</h3>
+                        <div class="tech-pills">
+                            <span>Oculus</span>
+                            <span>Unity</span>
+                            <span>WebXR</span>
+                        </div>
+                        <div class="feature-meter">
+                            <div class="meter-label">Performance</div>
+                            <div class="meter-bar">
+                                <div class="meter-fill" style="width: 96%"></div>
+                            </div>
+                            <div class="meter-value">96%</div>
+                        </div>
+                    </div>
+                    <div class="cyber-corners"></div>
+                </div>
+
+                <!-- Feature Box 2 -->
+                <div class="cyber-box highlight">
+                    <div class="box-content">
+                        <div class="neon-icon">
+                            <i class="fas fa-cube"></i>
+                        </div>
+                        <h3>3D Modeling</h3>
+                        <div class="tech-pills">
+                            <span>Blender</span>
+                            <span>Maya</span>
+                            <span>ZBrush</span>
+                        </div>
+                        <div class="feature-meter">
+                            <div class="meter-label">Quality</div>
+                            <div class="meter-bar">
+                                <div class="meter-fill" style="width: 98%"></div>
+                            </div>
+                            <div class="meter-value">98%</div>
+                        </div>
+                    </div>
+                    <div class="cyber-corners"></div>
+                </div>
+
+                <!-- Feature Box 3 -->
+                <div class="cyber-box secondary">
+                    <div class="box-content">
+                        <div class="neon-icon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <h3>Real-time Rendering</h3>
+                        <div class="tech-pills">
+                            <span>RTX</span>
+                            <span>DLSS</span>
+                            <span>Ray Tracing</span>
+                        </div>
+                        <div class="feature-meter">
+                            <div class="meter-label">Speed</div>
+                            <div class="meter-bar">
+                                <div class="meter-fill" style="width: 94%"></div>
+                            </div>
+                            <div class="meter-value">94%</div>
+                        </div>
+                    </div>
+                    <div class="cyber-corners"></div>
+                </div>
+            </div>
+
+            <!-- Interactive Feature Showcase -->
+            <div class="cyber-showcase">
+                <div class="showcase-header">
+                    <h2>Performance Metrics</h2>
+                    <div class="cyber-line"></div>
+                </div>
+                <div class="metric-grid">
+                    <div class="metric-box">
+                        <div class="metric-value">4K</div>
+                        <div class="metric-label">Resolution</div>
+                        <div class="metric-bar" data-value="90"></div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">144</div>
+                        <div class="metric-label">FPS</div>
+                        <div class="metric-bar" data-value="95"></div>
+                    </div>
+                    <div class="metric-box">
+                        <div class="metric-value">0.1ms</div>
+                        <div class="metric-label">Latency</div>
+                        <div class="metric-bar" data-value="98"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        // DOM Elements
+const loader = document.querySelector('.loader');
+const progressBarFill = document.querySelector('.progress-bar-fill');
+const loadingText = document.querySelector('.loading-text');
+const header = document.querySelector('header');
+const menuToggle = document.querySelector('.menu-toggle');
+const nav = document.querySelector('nav');
+
+// Variables
+let scene, camera, renderer, clock;
+let particleSystem, particles;
+let mouseX = 0, mouseY = 0;
+const windowHalfX = window.innerWidth / 2;
+const windowHalfY = window.innerHeight / 2;
+
+// Initialize Three.js scene
+function init() {
+    // Scene setup
+    scene = new THREE.Scene();
+    
+    // Camera setup
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 50;
+    
+    // Renderer setup
+    renderer = new THREE.WebGLRenderer({ 
+        canvas: document.getElementById('scene-canvas'),
+        antialias: true,
+        alpha: true 
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    // Clock for animations
+    clock = new THREE.Clock();
+    
+    // Create particle system
+    createParticles();
+    
+    // Add lights
+    addLights();
+    
+    // Add custom 3D object
+    addCustomObject();
+    
+    // Add event listeners
+    window.addEventListener('resize', onWindowResize);
+    document.addEventListener('mousemove', onDocumentMouseMove);
+    
+    // Start animation loop
+    animate();
+    
+    // Hide loader after everything is loaded
+    setTimeout(() => {
+        loader.style.opacity = 0;
+        loader.style.visibility = 'hidden';
+    }, 1000);
+}
+
+// Create particle system
+function createParticles() {
+    const particleCount = 2000;
+    const particleGeometry = new THREE.BufferGeometry();
+    const particlePositions = new Float32Array(particleCount * 3);
+    
+    for (let i = 0; i < particleCount * 3; i += 3) {
+        // Create particles in a sphere
+        const radius = 40 * Math.random();
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.random() * Math.PI;
+        
+        particlePositions[i] = radius * Math.sin(phi) * Math.cos(theta);
+        particlePositions[i + 1] = radius * Math.sin(phi) * Math.sin(theta);
+        particlePositions[i + 2] = radius * Math.cos(phi);
+    }
+    
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+    
+    // Create particle material
+    const particleMaterial = new THREE.PointsMaterial({
+        color: 0x6c5ce7,
+        size: 0.1,
+        transparent: true,
+        opacity: 0.7,
+        blending: THREE.AdditiveBlending,
+        sizeAttenuation: true
+    });
+    
+    // Create particle system
+    particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+    scene.add(particleSystem);
+}
+
+// Add lighting to the scene
+function addLights() {
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+    
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(10, 10, 10);
+    scene.add(directionalLight);
+    
+    const pointLight1 = new THREE.PointLight(0x6c5ce7, 1, 100);
+    pointLight1.position.set(10, 5, 10);
+    scene.add(pointLight1);
+    
+    const pointLight2 = new THREE.PointLight(0x00d2ff, 1, 100);
+    pointLight2.position.set(-10, -5, -10);
+    scene.add(pointLight2);
+}
+
+// Add custom 3D object
+function addCustomObject() {
+    // Create a torus knot
+    const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+    
+    // Create a material with custom shader
+    const material = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        metalness: 0.8,
+        roughness: 0.2,
+        emissive: 0x6c5ce7,
+        emissiveIntensity: 0.2
+    });
+    
+    const torusKnot = new THREE.Mesh(geometry, material);
+    scene.add(torusKnot);
+    
+    // Animation function for the torus knot
+    function animateTorusKnot() {
+        torusKnot.rotation.x += 0.003;
+        torusKnot.rotation.y += 0.005;
+        
+        requestAnimationFrame(animateTorusKnot);
+    }
+    
+    animateTorusKnot();
+}
+
+// Handle window resize
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+// Handle mouse movement
+function onDocumentMouseMove(event) {
+    mouseX = (event.clientX - windowHalfX) * 0.05;
+    mouseY = (event.clientY - windowHalfY) * 0.05;
+}
+
+// Animation loop
+function animate() {
+    requestAnimationFrame(animate);
+    
+    // Rotate the particle system
+    particleSystem.rotation.x += 0.001;
+    particleSystem.rotation.y += 0.002;
+    
+    // Move camera based on mouse position
+    camera.position.x += (mouseX - camera.position.x) * 0.05;
+    camera.position.y += (-mouseY - camera.position.y) * 0.05;
+    camera.lookAt(scene.position);
+    
+    // Render the scene
+    renderer.render(scene, camera);
+}
+
+// Fake loading progress
+function simulateLoading() {
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 10;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            init(); // Initialize Three.js scene after loading
+        }
+        
+        progressBarFill.style.width = `${progress}%`;
+        loadingText.textContent = `${Math.floor(progress)}%`;
+    }, 200);
+}
+
+// Handle scroll events for header
+function handleScroll() {
+    if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
+}
+
+// Toggle mobile menu
+function toggleMenu() {
+    nav.classList.toggle('active');
+}
+
+// Animate sections on scroll with GSAP
+function initScrollAnimations() {
+    // Register ScrollTrigger plugin
+    gsap.registerPlugin(ScrollTrigger);
+    
+    // Hero animations
+    gsap.from('.hero-title', {
+        y: 100,
+        opacity: 0,
+        duration: 1.5,
+        ease: 'power4.out'
+    });
+    
+    gsap.from('.hero-subtitle', {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out',
+        delay: 0.3
+    });
+    
+    gsap.from('.cta-button', {
+        scale: 0.8,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'back.out(1.7)',
+        delay: 0.6
+    });
+    
+    // Projects section animations
+    gsap.from('.section-title', {
+        scrollTrigger: {
+            trigger: '.content-section',
+            start: 'top 80%'
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out'
+    });
+    
+    gsap.from('.project-card', {
+        scrollTrigger: {
+            trigger: '.projects-grid',
+            start: 'top 80%'
+        },
+        y: 100,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: 'power3.out'
+    });
+    
+    // About section animations
+    gsap.from('.about-text', {
+        scrollTrigger: {
+            trigger: '.about-section',
+            start: 'top 80%'
+        },
+        x: -100,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out'
+    });
+    
+    gsap.from('.stat', {
+        scrollTrigger: {
+            trigger: '.about-stats',
+            start: 'top 80%'
+        },
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: 'power3.out'
+    });
+    
+    // Contact section animations
+    gsap.from('.contact-form', {
+        scrollTrigger: {
+            trigger: '.contact-section',
+            start: 'top 80%'
+        },
+        y: 100,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out'
+    });
+}
+
+// Event listeners
+window.addEventListener('load', () => {
+    simulateLoading();
+    initScrollAnimations();
+});
+
+window.addEventListener('scroll', handleScroll);
+menuToggle.addEventListener('click', toggleMenu);
+
+// Form submission
+const contactForm = document.querySelector('.contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // Here you would typically send the form data to a server
+        // For this example, we'll just show a success message
+        const formData = new FormData(contactForm);
+        console.log('Form submitted:', Object.fromEntries(formData));
+        
+        // Show success message (you would implement this)
+        alert('Message sent successfully!');
+        
+        // Reset form
+        contactForm.reset();
+    });
+} </script>
+</body>
+</html> 
